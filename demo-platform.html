@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>GameLib</title>
+    <link href='css/gamelib.css' rel='stylesheet'>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+
+            /* This centers our sketch horizontally. */
+            justify-content: center;
+
+            /* This centers our sketch vertically. */
+            align-items: center;
+        }
+
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <game></game>
+    <p>Use your arrow keys!</p>
+
+    <script src="js/gamelib.js"></script>
+    <script>
+        var msg;
+        var coins = 0;
+
+        function message(text) {
+            msg.img.text = text;
+            //console.log(text);
+        }
+
+        class Player extends Figure {
+            constructor(x, y, width, height, img) {
+                super(x, y, width, height, img, "Player");
+                this.jump = 0;
+                this.onGround = false;
+            }
+
+            update(obj) {
+                if (this.jump == 0) {
+                    super.move(0, 3);
+                } else {
+                    super.move(0, -3);
+                    this.jump = this.jump - 3;
+                    this.onGround = false;
+                }
+            }
+
+            collidate(obj) {
+                this.onGround = true;
+                if (obj.type == "Coin") {
+                    message("Coins: " + coins);
+                    return false;
+                } else {
+                    return true;
+                }
+
+            }
+
+            keyHold(key) {
+                switch (key) {
+                    case "ArrowLeft":
+                        // Do something for "left arrow" key press.
+                        this.img.costume = "left";
+                        this.move(-3, 0);
+                        break;
+                    case "ArrowRight":
+                        // Do something for "right arrow" key press.
+                        this.img.costume = "right";
+                        this.move(3, 0);
+                        break;
+                    default:
+                        return; // Quit when this doesn't handle the key event.
+                }
+            }
+
+            keyPressed(key) {
+                switch (key) {
+                    case "ArrowUp":
+                        // Do something for "up arrow" key press.
+                        if (this.onGround) this.jump = 120;
+                        break;
+                    default:
+                        this.img.costumes["idle"] = [this.img.costumes[this.img.costume][0]];
+                        this.img.costume = "idle";
+                }
+            }
+        }
+
+        class Coin extends Figure {
+            constructor(x, y, width, height, img) {
+                super(x, y, width, height, img, "Coin");
+                this.value = 1;
+                this.onGround = false;
+            }
+
+            update(obj) {
+                super.move(0, 3);
+            }
+
+            collidate(obj) {
+                if (obj.type == "Player") {
+                    coins = coins + this.value;
+                    this.value = 0;
+                    this.img = new StaticNothing(this.width, this.height);
+                }
+                return false;
+            }
+        }
+
+        (async function () {
+            var world = new World("game", 800, 600);
+            world.background = new StaticImg("img/backgrounds/sky.png", 800, 600);
+
+            var player = new Player(50, 400, 64, 64, new Sprite("img/character-plattformer/dude.png", 32, 48));
+            player.img.costumes["left"] = [0, 1, 2, 3];
+            player.img.costumes["right"] = [5, 6, 7, 8];
+            player.img.costumes["idle"] = [4];
+            player.img.costume = "idle";
+            world.addEntity(player);
+
+            var coin = new Coin(300, 300, 16, 16, new Sprite("img/objects/coins.png", 16, 16));
+            coin.img.costumes["default"] = [0, 1, 2, 3, 4, 5, 6, 7];
+            coin.img.costume = "default";
+            world.addEntity(coin);
+
+            var ground = new Figure(0, 550, 800, 50, new StaticBackground("#215F3E", 800, 50));
+            world.addEntity(ground);
+
+            msg = new Figure(20, 20, 64, 64, new StaticText("Coins: " + coins));
+            world.addEntity(msg);
+
+            await world.play();
+
+        })()
+    </script>
+
+</body>
+
+</html>

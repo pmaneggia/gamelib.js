@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>GameLib</title>
+    <link href='css/gamelib.css' rel='stylesheet'>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+
+            /* This centers our sketch horizontally. */
+            justify-content: center;
+
+            /* This centers our sketch vertically. */
+            align-items: center;
+        }
+
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <game></game>
+    <p>Use your arrow keys to go to the cute knight!</p>
+
+    <script src="js/gamelib.js"></script>
+    <script>
+        var msg;
+
+        class ModernGirl extends Figure {
+            constructor(x, y, width, height, img) {
+                super(x, y, width, height, img, "ModernGirl");
+
+            }
+
+            collidate(obj) {
+                if (obj.type == "knight") message("That's a cute knight!")
+                super.collidate(obj);
+            }
+
+            keyHold(key) {
+                switch (key) {
+                    case "ArrowDown":
+                        // Do something for "down arrow" key press.
+                        this.img.costume = "down";
+                        this.move(0, 1);
+                        break;
+                    case "ArrowUp":
+                        // Do something for "up arrow" key press.
+                        this.img.costume = "up";
+                        this.move(0, -1);
+                        break;
+                    case "ArrowLeft":
+                        // Do something for "left arrow" key press.
+                        this.img.costume = "left";
+                        this.move(-1, 0);
+                        break;
+                    case "ArrowRight":
+                        // Do something for "right arrow" key press.
+                        this.img.costume = "right";
+                        this.move(1, 0);
+                        break;
+                    default:
+                        return; // Quit when this doesn't handle the key event.
+                }
+            }
+
+            keyPressed(key) {
+                this.img.costumes["idle"] = [this.img.costumes[this.img.costume][0]];
+                this.img.costume = "idle";
+            }
+        }
+
+        function message(text) {
+            msg.img.text = text;
+            console.log(text);
+        }
+
+        (async function () {
+            var world = new World("game", 400, 200);
+            world.background = new StaticBackground("#558b6e", 400, 200);
+
+            var player1 = new Figure(50, 110, 64, 64, new Sprite("img/character-plattformer/sheet_hero_idle.png", 64, 64));
+            player1.type = "knight";
+            player1.img.costumes["idle"] = [0, 1, 2, 3, 4, 5, 6];
+            player1.img.costume = "idle";
+            world.addEntity(player1);
+
+
+            var player2 = new ModernGirl(210, 110, 32, 48, new Sprite("img/character-rpg/moderngirl02.png", 32, 48));
+            player2.img.costumes["down"] = [0, 1, 2, 3];
+            player2.img.costumes["left"] = [4, 5, 6, 7];
+            player2.img.costumes["right"] = [8, 9, 10, 11];
+            player2.img.costumes["up"] = [12, 13, 14, 15];
+            player2.img.costumes["idle"] = [0];
+            player2.img.costume = "idle";
+            world.addEntity(player2);
+
+            var text = new StaticText("Hello World!");
+            text.fontFamily = "Gaegu";
+            msg = new Figure(20, 20, 64, 64, text);
+            world.addEntity(msg);
+
+            await world.play();
+        })()
+    </script>
+
+</body>
+
+</html>
