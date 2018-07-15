@@ -4,14 +4,14 @@
 
 gamelib.js dient ausschließlich zu Lehrzwecken. Für professionelle Entwicklung in JavaScript gibt es weit besser geeignetere (und komplexere) Bibliotheken. Etwa [phaser.io](https://phaser.io/) oder [melonJS](www.melonjs.org/) (mehr bei [GitHub](https://github.com/collections/game-engines)).
 
-![hello world](screenshot/hello world.png)
+![hello world](https://wi-wissen.github.io/gamelib.js/screenshot/hello%20world.png)
 
 
 
 Demos:
 
-* [RPG (Role Playing Game oder "Adventure")](demo-rpg.html)
-* [Plattformer ("Hüpfespiel")](demo-platform.html)
+* [RPG (Role Playing Game oder "Adventure")](https://wi-wissen.github.io/gamelib.js/demo-rpg.html) - [Source](demo-rpg.html)
+* [Plattformer ("Hüpfespiel")](https://wi-wissen.github.io/gamelib.js/demo-platform.html) - [Source](demo-platform.html)
 
 ## Vorraussetzungen
 
