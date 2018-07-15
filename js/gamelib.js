@@ -22,9 +22,7 @@ class World {
         domentry.appendChild(this.canvas);
 
         //for loading images with correct path
-        var scripts = document.getElementsByTagName('script');
-        var path = scripts[scripts.length - 1].src.split('?')[0];      // remove any ?query
-        this.basePath = path.split('/').slice(0, -1).join('/') + '/';  // remove last filename part of path
+        this.basePath = location.href.substring(0, location.href.lastIndexOf("/") + 1);
 
         //get all keyboard inputs
         var self = this;
@@ -34,7 +32,7 @@ class World {
             }
 
             if (!self._keyDown.includes(event.key)) self._keyDown.push(event.key);
-            
+
             // Cancel the default action to avoid it being handled twice
             event.preventDefault();
         }, true);
@@ -89,7 +87,7 @@ class World {
             if (a != b) {
                 if (!(x >= b.x + b.width || y >= b.y + b.height ||
                     x + a.width <= b.x || y + a.height <= b.y)) {
-                        //console.log(a.collidate(b) || b.collidate(a));
+                    //console.log(a.collidate(b) || b.collidate(a));
                     result = result || (a.collidate(b) || b.collidate(a));
                 }
             }
@@ -119,8 +117,8 @@ class World {
         var loadImage = function (src) {
             var img = new Image();
             img.onload = complete;
-            console.log("img.src = " + self.basePath + "../" + src);
-            img.src = self.basePath + "../" + src;
+            console.log("img.src = " + self.basePath + src);
+            img.src = self.basePath + src;
             return img;
         }
 
@@ -237,7 +235,7 @@ class Entity {
         return true;
     }
 
-    update () {
+    update() {
         return true;
     }
 
