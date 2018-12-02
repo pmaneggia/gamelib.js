@@ -83,12 +83,15 @@ class World {
 
     checkCollision(a, x, y) {
         var result = false;
+        var result_a, result_b;
         for (let b of this._entity) {
             if (a != b) {
                 if (!(x >= b.x + b.width || y >= b.y + b.height ||
                     x + a.width <= b.x || y + a.height <= b.y)) {
                     //console.log(a.collidate(b) || b.collidate(a));
-                    result = result || (a.collidate(b) || b.collidate(a));
+                    result_a = a.collidate(b);
+                    result_b = b.collidate(a);
+                    result = result || (result_a || result_b); //ja validates only until frist true. So you HAVE to call all functions before!
                 }
             }
         }
